@@ -1,0 +1,14 @@
+language: node_js
+services:
+  - mongodb
+before_script:
+  - sleep 15
+addons:
+  hosts:
+    - mongodb
+node_js:
+  - "stable"
+sudo: false
+script:
+  - npm test
+  - npm run lint

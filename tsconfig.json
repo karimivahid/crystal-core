@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "module": "commonjs",
+    "target": "es2017",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "pretty": true,
+    "declaration": true
+  },
+  "files": [
+    "src/main.ts"
+  ]
+}
