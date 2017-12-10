@@ -1,6 +1,6 @@
 {
-  "name": "microservice-boilerplate",
-  "version": "1.0.0",
+  "name": "crystal-core",
+  "version": "0.0.1",
   "description": "",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",

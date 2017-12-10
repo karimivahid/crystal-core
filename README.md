@@ -39,4 +39,4 @@ npm install crystal-core
 The typescript type definitions are also available and are installed with npm.
 
 ## License
-This project is licensed under the [MIT license]().
+This project is licensed under the [MIT license](https://github.com/karimivahid/crystal-core/blob/master/LICENSE).
