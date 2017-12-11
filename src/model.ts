@@ -2,7 +2,7 @@
 import * as commonErrors from './commonErrors';
 // for pagination
 import * as mongoosePaginate from 'mongoose-paginate';
-import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions } from 'mongoose';
+import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection } from 'mongoose';
 require('mongoose').Promise = global.Promise;
 
 export interface QueryInterface {
