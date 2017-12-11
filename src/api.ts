@@ -8,11 +8,11 @@ export function createCrudAPI(crudModel: CrudModelInterface) {
     let query = await decorateQuery(q);
     query.criteria.cid = ctx.request.body.cid;
     let result = await crudModel.findAll(query);
-    ctx.body = result;
+    ctx.body = { result };
     return;
   };
   let findById = async (ctx: any, next: any) => {
-    ctx.body = await crudModel.findOne({
+    let result = await crudModel.findOne({
       criteria: {
         _id: ctx.request.query.id,
         cid: ctx.request.body.cid
@@ -21,12 +21,15 @@ export function createCrudAPI(crudModel: CrudModelInterface) {
         select: {}
       }
     });
+    ctx.body = { result };
   };
   let insert = async (ctx: any, next: any) => {
     delete ctx.request.body.id;
     delete ctx.request.body._id;
     let result = await crudModel.insert(ctx.request.body, ctx.requester);
-    ctx.body = { "id": result._id };
+    ctx.body = {
+      result: { "id": result._id }
+    };
   };
   let updateById = async (ctx: any, next: any) => {
     await crudModel.update({ _id: ctx.request.query.id, cid: ctx.request.body.cid }, ctx.request.body);

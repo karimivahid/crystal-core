@@ -60,7 +60,7 @@ describe('Crud API Operations', async () => {
       }
     };
     await api.findAll(ctx, undefined);
-    expect(ctx.body.docs).to.be.an('array').and.not.to.be.empty;
+    expect(ctx.body.result.docs).to.be.an('array').and.not.to.be.empty;
   });
 
 
