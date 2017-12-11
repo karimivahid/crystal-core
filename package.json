@@ -1,6 +1,6 @@
 {
   "name": "crystal-core",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "This is the SAN microservice module for building fast REST API microservices",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
@@ -23,6 +23,14 @@
   ],
   "author": "Siamak Salman",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karimivahid/crystal-core"
+  },
+  "bugs": {
+    "url": "https://github.com/karimivahid/crystal-core/issues"
+  },
+  "homepage": "https://github.com/karimivahid/crystal-core",
   "dependencies": {
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
