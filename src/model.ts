@@ -2,7 +2,7 @@
 import * as commonErrors from './commonErrors';
 // for pagination
 import * as mongoosePaginate from 'mongoose-paginate';
-import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection } from 'mongoose';
+import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions } from 'mongoose';
 require('mongoose').Promise = global.Promise;
 
 export interface QueryInterface {
@@ -120,10 +120,14 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     let out = await myModel.paginate(query.criteria, query.options);
     return { docs: out.docs, total: out.total };
   };
-  let findOne = async (query: StrictQueryInterface) => {
+  let findOne = async (query: StrictQueryInterface, populate?: ModelPopulateOptions) => {
     let result;
     try {
-      result = await myModel.findOne(query.criteria, query.options.select);
+      result = myModel.findOne(query.criteria, query.options.select);
+      if (populate) {
+        result.populate(populate);
+      }
+      result = await result;
     }
     catch (e) {
       throw commonErrors.badRequest("Find Error", e.message);
