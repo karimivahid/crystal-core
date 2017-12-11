@@ -35,7 +35,7 @@ export interface CrudModelInterface {
     docs: Document[];
     total: number;
   }>;
-  findOne: (query: StrictQueryInterface) => Promise<any>;
+  findOne: (query: StrictQueryInterface, populate?: ModelPopulateOptions) => Promise<any>;
   insert: (data: any, creator?: any) => Promise<any>;
   update: (options: FindByIDOptions, data: any) => Promise<void>;
   del: (options: FindByIDOptions) => Promise<void>;
