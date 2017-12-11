@@ -1,7 +1,7 @@
 {
   "name": "crystal-core",
-  "version": "0.0.1",
-  "description": "",
+  "version": "0.0.2",
+  "description": "This is the SAN microservice module for building fast REST API microservices",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
   "files": [
