@@ -8,7 +8,7 @@ export function createCrudAPI(crudModel: CrudModelInterface) {
     let query = await decorateQuery(q);
     query.criteria.cid = ctx.request.body.cid;
     let result = await crudModel.findAll(query);
-    ctx.body = { result };
+    ctx.body = { result: result };
     return;
   };
   let findById = async (ctx: any, next: any) => {
@@ -21,7 +21,7 @@ export function createCrudAPI(crudModel: CrudModelInterface) {
         select: {}
       }
     });
-    ctx.body = { result };
+    ctx.body = { result: result };
   };
   let insert = async (ctx: any, next: any) => {
     delete ctx.request.body.id;
