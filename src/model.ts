@@ -48,7 +48,14 @@ export async function init(database: string = "mydb") {
   console.log(`DB is now connected to ${database}`);
 }
 
-export function createSchema(definition: SchemaDefinition) {
+export function createSchema(definition: SchemaDefinition, addTracker = true) {
+  if (addTracker) {
+    definition['createdBy'] = {
+      username: { type: String, minlength: 3, maxlength: 20, required: true },
+      uid: { type: "ObjectId", ref: 'User', required: true }
+    };
+    definition['modifiedAt'] = { type: Date, default: Date.now };
+  }
   const schema = new Schema(definition);
   schema.set('toJSON', {
     virtuals: true,
