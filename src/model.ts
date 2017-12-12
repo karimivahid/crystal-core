@@ -50,6 +50,7 @@ export async function init(database: string = "mydb") {
 
 export function createSchema(definition: SchemaDefinition, addTracker = true) {
   if (addTracker) {
+    definition['createdAt'] = { type: Date, default: Date.now, required: true };
     definition['createdBy'] = {
       username: { type: String, minlength: 3, maxlength: 20, required: true },
       uid: { type: "ObjectId", ref: 'User', required: true }
