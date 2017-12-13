@@ -1,9 +1,11 @@
 // importing common application errors
-import * as commonErrors from './commonErrors';
+import appError from './appError';
 // for pagination
 import * as mongoosePaginate from 'mongoose-paginate';
-import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions } from 'mongoose';
+import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions, ValidationError } from 'mongoose';
 require('mongoose').Promise = global.Promise;
+const beautifyUnique = require('mongoose-beautiful-unique-validation');
+
 
 export interface QueryInterface {
   criteria: {
@@ -48,11 +50,27 @@ export async function init(database: string = "mydb") {
   console.log(`DB is now connected to ${database}`);
 }
 
+
+function createError(error: any, doc: any, next: any) {
+  if (!error) {
+    return next();
+  }
+
+  let out: any[] = [];
+  for (let key in error.errors) {
+    let field = error.errors[key];
+    out.push(field.message);
+  }
+  error.errors = out;
+  next();
+}
+
+
 export function createSchema(definition: SchemaDefinition, addTracker = true) {
   if (addTracker) {
     definition['createdAt'] = { type: Date, default: Date.now, required: true };
     definition['createdBy'] = {
-      username: { type: String, minlength: 3, maxlength: 20, required: true },
+      username: { type: String, required: true },
       uid: { type: "ObjectId", ref: 'User', required: true }
     };
     definition['modifiedAt'] = { type: Date, default: Date.now };
@@ -63,32 +81,11 @@ export function createSchema(definition: SchemaDefinition, addTracker = true) {
     versionKey: false,
     transform: function (doc: any, ret: any) { delete ret._id; delete ret.cid; }
   });
-  // transforming mongoose post validation errors to our own
-  schema.post('validate', function (error: any, doc: any, next: any) {
-    let out: any = {};
-    /*
-     * the client needs to know which field has what error. the out parameter with be something like this
-     * { 'name': 'required' } or { 'name': 'maxlength' }
-     * or if it has multiple fields error it wil be something like this 
-     * { 'name': 'required', 'password': 'required' }
-    */
-    for (let key in error.errors) {
-      let field = error.errors[key];
-      out[key] = field.kind.toLowerCase();
-    }
-    return next(commonErrors.badRequest("Validation Error", error.message, error.code, out));
-  });
-  // transforming post save errors ( index duplication ) and other unexpected errors to owr own
-  schema.post('save', function (error: any, doc: any, next: any) {
-    if (error.name !== 'MongoError') {
-      return next();
-    }
-    console.log(error.message);
-    if (error.code == 11000) {
-      return next(commonErrors.badRequest("Duplicated", error.message, undefined, { "username": "duplicated" }));
-    }
-    next(commonErrors.badRequest("Saving Error", error.message, error.code));
-  });
+  schema.plugin(beautifyUnique);
+  schema.post('validation', createError);
+  schema.post('save', createError);
+  schema.post('update', createError);
+  schema.post('findOneAndUpdate', createError);
   return {
     createIndex: (indexs: any) => { schema.index(indexs, { "unique": true }); },
     addPagination: () => { schema.plugin(mongoosePaginate) },
@@ -138,10 +135,10 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
       result = await result;
     }
     catch (e) {
-      throw commonErrors.badRequest("Find Error", e.message);
+      // throw commonErrors.badRequest("Find Error", e.message);
     }
     if (!result) {
-      throw commonErrors.notFound("Empty Result");
+      // throw commonErrors.notFound("Empty Result");
     }
     return result;
   };
@@ -150,6 +147,7 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     result.createdBy = creator;
     await result.save();
     return result;
+
   };
   let update = async (options: FindByIDOptions, data: any) => {
     let result: any = await findOne(

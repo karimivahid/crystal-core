@@ -4,6 +4,31 @@ import * as mongoose from 'mongoose';
 
 import * as model from "./model";
 
+
+
+
+function createErrorMessage(err: any) {
+  let errorMessage: any = {
+    message: err.message,
+    errors: []
+  };
+
+  for (let prop in err.errors) {
+
+    errorMessage.errors.push({
+      propertyName: prop,
+      propertyPath: err.errors[prop].path,
+      validation: err.errors[prop].kind,
+      message: err.errors[prop].message || err.errors[prop].kind
+    });
+  }
+
+  if (errorMessage.errors.length <= 0) delete errorMessage.errors;
+
+  return errorMessage;
+}
+
+
 describe('Crud Model Operations', async () => {
   let newCrudSchema: any;
   let newCrudModel: model.CrudModelInterface;
@@ -11,7 +36,7 @@ describe('Crud Model Operations', async () => {
     await model.init("testDatabase");
     newCrudSchema = model.createSchema({
       cid: { type: Number, required: true, index: true },
-      name: { type: String, maxlength: 20, required: true },
+      name: { type: String, maxlength: 10, required: true },
       createdAt: { type: Date, default: Date.now, required: true },
       createdBy: {
         username: { type: String, minlength: 3, maxlength: 20, required: true },
@@ -24,6 +49,7 @@ describe('Crud Model Operations', async () => {
 
   it('should create a test model', () => {
     newCrudSchema.addPagination();
+    newCrudSchema.createIndex({ cid: 1, name: -1 });
     newCrudModel = model.createModel("__testDoc", newCrudSchema.schema);
     expect(newCrudModel.model).not.be.equals(undefined);
   });
@@ -38,6 +64,52 @@ describe('Crud Model Operations', async () => {
       await newCrudModel.insert({ cid: 1, name: "a" + i }, creator);
     }
   });
+
+  it('should not insert this record', async () => {
+    const creator = {
+      cid: 1,
+      uid: "5a097f89f8652d6143019039",
+      username: "farhadi_tester"
+    };
+    try {
+      await newCrudModel.insert({ name: "fakerplus23" }, creator);
+    }
+    catch (e) {
+      console.log(handleMongoError(e));
+      expect(e).not.to.be.empty;
+    }
+  });
+
+  it('should throw error records', async () => {
+    const creator = {
+      cid: 1,
+      uid: "5a097f89f8652d6143019039",
+      username: "farhadi_tester"
+    };
+    try {
+      await newCrudModel.insert({ cid: "skdhaksdhsja", name: "aaaa" }, creator);
+    }
+    catch (e) {
+      console.log(handleMongoError(e));
+      expect(e).not.to.be.empty;
+    }
+  });
+
+  it('should throw error records too', async () => {
+    const creator = {
+      cid: 1,
+      uid: "5a097f89f8652d6143019039",
+      username: "farhadi_tester"
+    };
+    try {
+      await newCrudModel.insert({ cid: 1, name: "a0" }, creator);
+    }
+    catch (e) {
+      console.log(handleMongoError(e));
+      expect(e).not.to.be.empty;
+    }
+  });
+
 
 
   it('should find a record with name and limit option', async () => {

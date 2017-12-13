@@ -1,4 +1,4 @@
-import { AppError } from './appError';
+import AppError from './appError';
 
 
 export function notFound(message: string, originalMessage?: string) {
