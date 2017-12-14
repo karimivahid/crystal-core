@@ -46,21 +46,32 @@ export interface CrudModelInterface {
 }
 
 export async function init(database: string = "mydb") {
-  await connect(`mongodb://mongodb/${database}`, { useMongoClient: true });
-  console.log(`DB is now connected to ${database}`);
+  try {
+    await connect(`mongodb://mongodb/${database}`, { useMongoClient: true });
+    console.log(`DB is now connected to ${database}`);
+  }
+  catch (e) {
+    console.log(`Warning: DB can't connect to ${database}, retrying in 10 secconds`);
+    setTimeout(init, 10000);
+  }
+
+
 }
 
 
-function createError(error: any, doc: any, next: any) {
-  if (!error) {
+function createValidationError(error: any, doc: any, next: any) {
+  if (!error || !error.errors) {
     return next();
   }
-
   let out: any[] = [];
   for (let key in error.errors) {
     let field = error.errors[key];
+    if (field.path === "cid") {
+      continue;
+    }
     out.push(field.message);
   }
+  error.message = "Validation Error";
   error.errors = out;
   next();
 }
@@ -82,10 +93,10 @@ export function createSchema(definition: SchemaDefinition, addTracker = true) {
     transform: function (doc: any, ret: any) { delete ret._id; delete ret.cid; }
   });
   schema.plugin(beautifyUnique);
-  schema.post('validation', createError);
-  schema.post('save', createError);
-  schema.post('update', createError);
-  schema.post('findOneAndUpdate', createError);
+  schema.post('validation', createValidationError);
+  schema.post('save', createValidationError);
+  schema.post('update', createValidationError);
+  schema.post('findOneAndUpdate', createValidationError);
   return {
     createIndex: (indexs: any) => { schema.index(indexs, { "unique": true }); },
     addPagination: () => { schema.plugin(mongoosePaginate) },

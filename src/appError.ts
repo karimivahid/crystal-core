@@ -1,7 +1,7 @@
-export default class AppError extends Error{
+export default class AppError extends Error {
   status: number;
   isOperationalError: boolean;
-  originalMessage:string;
+  originalMessage: string;
   code: number;
   errors: any[];
   constructor(message: string, status: number, originalMessage?: string, code?: number, errors?: any) {
