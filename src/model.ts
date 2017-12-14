@@ -54,8 +54,6 @@ export async function init(database: string = "mydb") {
     console.log(`Warning: DB can't connect to ${database}, retrying in 10 secconds`);
     setTimeout(init, 10000);
   }
-
-
 }
 
 

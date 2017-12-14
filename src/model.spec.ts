@@ -75,7 +75,6 @@ describe('Crud Model Operations', async () => {
       await newCrudModel.insert({ name: "fakerplus23" }, creator);
     }
     catch (e) {
-      console.log(handleMongoError(e));
       expect(e).not.to.be.empty;
     }
   });
@@ -90,7 +89,6 @@ describe('Crud Model Operations', async () => {
       await newCrudModel.insert({ cid: "skdhaksdhsja", name: "aaaa" }, creator);
     }
     catch (e) {
-      console.log(handleMongoError(e));
       expect(e).not.to.be.empty;
     }
   });
@@ -105,7 +103,6 @@ describe('Crud Model Operations', async () => {
       await newCrudModel.insert({ cid: 1, name: "a0" }, creator);
     }
     catch (e) {
-      console.log(handleMongoError(e));
       expect(e).not.to.be.empty;
     }
   });
