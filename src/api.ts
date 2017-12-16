@@ -32,14 +32,10 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
 }
 
 
-export function createAppError(code: string, errorsObject: any) {
-  console.log(errorsObject[code]);
-  if (!errorsObject[code]) {
-    return;
-  }
-  let err = { ...errorsObject[code] };
-  delete err.httpCode;
-  return new AppError(err.message, errorsObject[code].httpCode, [err]);
+export function createAppError(code: string, message?: string) {
+  let out: any = new Error(message);
+  out.errors = [code];
+  return out;
 }
 
 

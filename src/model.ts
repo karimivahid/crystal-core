@@ -136,18 +136,15 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
   };
   let findOne = async (query: StrictQueryInterface, populate?: ModelPopulateOptions) => {
     let result;
-    try {
-      result = myModel.findOne(query.criteria, query.options.select);
-      if (populate) {
-        result.populate(populate);
-      }
-      result = await result;
+    result = myModel.findOne(query.criteria, query.options.select);
+    if (populate) {
+      result.populate(populate);
     }
-    catch (e) {
-      // throw commonErrors.badRequest("Find Error", e.message);
-    }
+    result = await result;
     if (!result) {
-      // throw commonErrors.notFound("Empty Result");
+      let e: any = new Error("Empty Result");
+      e.status = 404;
+      throw e;
     }
     return result;
   };
