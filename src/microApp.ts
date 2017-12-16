@@ -29,7 +29,6 @@ export function createApp(routers: any[], listenPort = 4001) {
       ctx.status = err.status || 500;
       ctx.body = {
         message: err.message,
-        code: err.code,
         errors: err.errors
       };
       ctx.app.emit('error', err, ctx);

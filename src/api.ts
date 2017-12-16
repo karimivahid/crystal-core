@@ -1,5 +1,46 @@
 import { CrudModelInterface, decorateQuery } from './model';
+import AppError from './appError';
 const q2m = require('query-to-mongo');
+
+export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: any) {
+  try {
+    await next();
+  }
+  catch (e) {
+    if (!e.errors || !e.errors.length) {
+      throw (e);
+    }
+
+    let message = e.message;
+    let status = 500;
+    let errors = [];
+    for (let i = 0, lng = e.errors.length; i < lng; i++) {
+      let index = e.errors[i];
+      if (!errorsObject[index]) {
+        errors.push({ code: index });
+        continue;
+      }
+      let newError = { ...errorsObject[index] };
+      if (i == 0) {
+        status = newError.httpCode;
+      }
+      delete newError.httpCode;
+      errors.push(newError);
+    }
+    throw new AppError(message, status, errors);
+  }
+}
+
+
+export function createAppError(code: string, errorsObject: any) {
+  console.log(errorsObject[code]);
+  if (!errorsObject[code]) {
+    return;
+  }
+  let err = { ...errorsObject[code] };
+  delete err.httpCode;
+  return new AppError(err.message, errorsObject[code].httpCode, [err]);
+}
 
 
 export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
