@@ -16,16 +16,21 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
     let errors = [];
     for (let i = 0, lng = e.errors.length; i < lng; i++) {
       let index = e.errors[i];
-      if (!errorsObject[index]) {
-        errors.push({ code: index });
-        continue;
+      if (index instanceof Object) {
+        errors.push(index);
       }
-      let newError = { ...errorsObject[index] };
-      if (i == 0) {
-        status = newError.httpCode;
+      else if (typeof index === "string") {
+        if (!errorsObject[index]) {
+          errors.push({ code: index });
+          continue;
+        }
+        let newError = { ...errorsObject[index] };
+        if (i == 0) {
+          status = newError.httpCode;
+        }
+        delete newError.httpCode;
+        errors.push(newError);
       }
-      delete newError.httpCode;
-      errors.push(newError);
     }
     throw new AppError(message, status, errors);
   }

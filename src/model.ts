@@ -122,7 +122,7 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
       schema.post('validation', createValidationError);
       schema.post('save', createValidationError);
       schema.post('update', createValidationError);
-      schema.post('findOneAndUpdate', createValidationError);      
+      schema.post('findOneAndUpdate', createValidationError);
     },
     schema
   }
@@ -168,7 +168,11 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     }
     result = await result;
     if (!result) {
-      throw new AppError("Empty Result", 400, ["10"]);
+      throw new AppError("Empty Result", 400, [{
+        code: "10",
+        message: "Nothing found with these criteria"
+      }
+      ]);
     }
     return result;
   };
