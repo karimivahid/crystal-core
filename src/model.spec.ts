@@ -34,22 +34,13 @@ describe('Crud Model Operations', async () => {
   let newCrudModel: model.CrudModelInterface;
   before(async function () {
     await model.init("testDatabase");
-    newCrudSchema = model.createSchema({
-      cid: { type: Number, required: true, index: true },
-      name: { type: String, maxlength: 10, required: true },
-      createdAt: { type: Date, default: Date.now, required: true },
-      createdBy: {
-        username: { type: String, minlength: 3, maxlength: 20, required: true },
-        uid: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
-      },
-      modifiedAt: { type: Date, default: Date.now },
-    });
+    newCrudSchema = model.createSchema({ name: { type: String, maxlength: 10, required: true } });
   });
 
 
   it('should create a test model', () => {
     newCrudSchema.addPagination();
-    newCrudSchema.createIndex({ cid: 1, name: -1 });
+    newCrudSchema.createIndex({ name: -1 });
     newCrudModel = model.createModel("__testDoc", newCrudSchema.schema);
     expect(newCrudModel.model).not.be.equals(undefined);
   });

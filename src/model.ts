@@ -96,7 +96,7 @@ function createValidationError(error: any, doc: any, next: any) {
  * @param   {boolean} addTracker to add tracker parameteres to schema or not
  * @returns {} Sum of a and b or an array that contains a, b and the sum of a and b.
  */
-export function createSchema(definition: SchemaDefinition, addTracker = true) {
+export function createSchema(definition: SchemaDefinition, addTracker = true, tenancy = true) {
   if (addTracker) {
     definition['createdAt'] = { type: Date, default: Date.now, required: true };
     definition['createdBy'] = {
@@ -105,20 +105,25 @@ export function createSchema(definition: SchemaDefinition, addTracker = true) {
     };
     definition['modifiedAt'] = { type: Date, default: Date.now };
   }
+  if (tenancy) {
+    definition['cid'] = { type: Number, required: true, index: true }
+  }
   const schema = new Schema(definition);
   schema.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc: any, ret: any) { delete ret._id; delete ret.cid; }
   });
-  schema.plugin(beautifyUnique);
-  schema.post('validation', createValidationError);
-  schema.post('save', createValidationError);
-  schema.post('update', createValidationError);
-  schema.post('findOneAndUpdate', createValidationError);
   return {
-    createIndex: (indexs: any) => { schema.index(indexs, { "unique": true }); },
-    addPagination: () => { schema.plugin(mongoosePaginate) },
+    createIndex: (indexs: any, message: string) => { schema.index(indexs, { "unique": message }); },
+    addPagination: () => {
+      schema.plugin(mongoosePaginate);
+      schema.plugin(beautifyUnique);
+      schema.post('validation', createValidationError);
+      schema.post('save', createValidationError);
+      schema.post('update', createValidationError);
+      schema.post('findOneAndUpdate', createValidationError);      
+    },
     schema
   }
 };
@@ -163,12 +168,7 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     }
     result = await result;
     if (!result) {
-      throw new AppError("Empty Result", 400, [
-        {
-          code: 400,
-          "message": "not found",
-        }
-      ]);
+      throw new AppError("Empty Result", 400, ["10"]);
     }
     return result;
   };
