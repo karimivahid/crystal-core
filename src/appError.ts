@@ -12,3 +12,10 @@ export default class AppError extends Error {
     this.errors = errors;
   }
 };
+
+
+export function createAppError(code: string, message?: string) {
+  let out: any = new Error(message);
+  out.errors = [code];
+  return out;
+}

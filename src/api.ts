@@ -32,13 +32,6 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
 }
 
 
-export function createAppError(code: string, message?: string) {
-  let out: any = new Error(message);
-  out.errors = [code];
-  return out;
-}
-
-
 export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
   let findAll;
   let findById;

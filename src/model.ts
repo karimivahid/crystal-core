@@ -1,5 +1,5 @@
 // importing common application errors
-import appError from './appError';
+import AppError from './appError';
 // for pagination
 import * as mongoosePaginate from 'mongoose-paginate';
 import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions, ValidationError } from 'mongoose';
@@ -163,9 +163,12 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     }
     result = await result;
     if (!result) {
-      let e: any = new Error("Empty Result");
-      e.status = 404;
-      throw e;
+      throw new AppError("Empty Result", 400, [
+        {
+          code: 400,
+          "message": "not found",
+        }
+      ]);
     }
     return result;
   };
