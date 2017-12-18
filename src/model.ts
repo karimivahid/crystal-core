@@ -45,6 +45,13 @@ export interface CrudModelInterface {
   [name: string]: any
 }
 
+
+
+/**
+ * Takes a database name and tries to connect to mongodb url ( this method should be call once at the start of your program)
+ * @async
+ * @param   {string} database name of the database
+ */
 export async function init(database: string = "mydb") {
   try {
     await connect(`mongodb://mongodb/${database}`, { useMongoClient: true });
@@ -57,6 +64,13 @@ export async function init(database: string = "mydb") {
 }
 
 
+
+/**
+ * Acts as a mongoose middleware for creating unified error
+ * @param   {any} error Mongoose error
+ * @param   {any} doc The document with error
+ * @param   {function} next Next middleware
+ */
 function createValidationError(error: any, doc: any, next: any) {
   if (!error || !error.errors) {
     return next();
@@ -75,6 +89,13 @@ function createValidationError(error: any, doc: any, next: any) {
 }
 
 
+/**
+ * Takes a mongoose schema definition object and creates a schema object
+ * It also can add optional tracker parameters
+ * @param   {any} definition Mongoose definition object
+ * @param   {boolean} addTracker to add tracker parameteres to schema or not
+ * @returns {} Sum of a and b or an array that contains a, b and the sum of a and b.
+ */
 export function createSchema(definition: SchemaDefinition, addTracker = true) {
   if (addTracker) {
     definition['createdAt'] = { type: Date, default: Date.now, required: true };
