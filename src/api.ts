@@ -17,6 +17,7 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
     for (let i = 0, lng = e.errors.length; i < lng; i++) {
       let index = e.errors[i];
       if (index instanceof Object) {
+        status = index.httpCode;
         errors.push(index);
       }
       else if (typeof index === "string") {
