@@ -57,15 +57,12 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       return;
     };
     findById = async (ctx: any, next: any) => {
-      let result = await crudModel.findOne({
-        criteria: {
-          _id: ctx.request.query.id,
-          cid: ctx.request.body.cid
-        },
-        options: {
-          select: { ...ctx.request.query.fields }
-        }
-      });
+      let q = q2m(ctx.querystring);
+      let query = await decorateQuery(q);
+      delete query.criteria.id;
+      query.criteria._id = ctx.request.query.id
+      query.criteria.cid = ctx.request.body.cid;
+      let result = await crudModel.findOne(query);
       ctx.body = { result: result };
     };
     insert = async (ctx: any, next: any) => {
