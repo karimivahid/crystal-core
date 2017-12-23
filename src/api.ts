@@ -63,7 +63,7 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
           cid: ctx.request.body.cid
         },
         options: {
-          select: {}
+          select: { ...ctx.request.query.fields }
         }
       });
       ctx.body = { result: result };
