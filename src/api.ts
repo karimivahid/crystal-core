@@ -26,6 +26,7 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
           continue;
         }
         let newError = { ...errorsObject[index] };
+        newError.code = index;
         if (i == 0) {
           status = newError.httpCode;
         }
