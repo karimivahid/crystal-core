@@ -109,17 +109,17 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
   }
   if (customFields) {
     let cf = new Schema({
-        key: { type: String, maxlength: 50,required: true },
-        value: { type: String, maxlength: 50, required: true }
-    },{
-      versionKey:false,
-    });
+      key: { type: String, maxlength: 50, required: true },
+      value: { type: String, maxlength: 50, required: true }
+    }, {
+        versionKey: false,
+      });
     cf.set('toJSON', {
       virtuals: true,
       versionKey: false,
       transform: function (doc: any, ret: any) { delete ret._id; delete ret.cid; }
     });
-    definition['customFields'] = [customFields];
+    definition['customFields'] = [cf];
   }
   const schema = new Schema(definition);
   schema.set('toJSON', {
