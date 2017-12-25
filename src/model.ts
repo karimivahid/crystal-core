@@ -88,7 +88,6 @@ function createValidationError(error: any, doc: any, next: any) {
   next();
 }
 
-
 /**
  * Takes a mongoose schema definition object and creates a schema object
  * It also can add optional tracker parameters
@@ -96,7 +95,7 @@ function createValidationError(error: any, doc: any, next: any) {
  * @param   {boolean} addTracker to add tracker parameteres to schema or not
  * @returns {} Sum of a and b or an array that contains a, b and the sum of a and b.
  */
-export function createSchema(definition: SchemaDefinition, addTracker = true, tenancy = true) {
+export function createSchema(definition: SchemaDefinition, addTracker = true, tenancy = true, customFields = false) {
   if (addTracker) {
     definition['createdAt'] = { type: Date, default: Date.now, required: true };
     definition['createdBy'] = {
@@ -107,6 +106,12 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
   }
   if (tenancy) {
     definition['cid'] = { type: Number, required: true, index: true }
+  }
+  if (customFields) {
+    definition['customFields'] = [{
+      key: { type: String, maxlength: 50,required: true },
+      value: { type: String, maxlength: 50, required: true }
+    }];
   }
   const schema = new Schema(definition);
   schema.set('toJSON', {
