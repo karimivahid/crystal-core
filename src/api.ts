@@ -10,7 +10,6 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
     if (!e.errors || !e.errors.length) {
       throw (e);
     }
-
     let message = e.message;
     let status = 500;
     let errors = [];
@@ -45,8 +44,6 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
   let insert;
   let updateById;
   let del;
-
-
   if (withCID) {
     findAll = async (ctx: any, next: any) => {
       let q = q2m(ctx.querystring);
@@ -74,7 +71,7 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       };
     };
     updateById = async (ctx: any, next: any) => {
-      await crudModel.update({ _id: ctx.request.query.id, cid: ctx.request.body.cid }, ctx.request.body);
+      await crudModel.update({ _id: ctx.request.query.id, cid: ctx.request.body.cid }, ctx.request.body, ctx.requester);
       ctx.body = { result: true };
     };
     del = async (ctx: any, next: any) => {
@@ -103,12 +100,10 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       delete ctx.request.body.id;
       delete ctx.request.body._id;
       let result = await crudModel.insert(ctx.request.body, ctx.requester);
-      ctx.body = {
-        result: { "id": result._id }
-      };
+      ctx.body = { result: { "id": result._id } };
     };
     updateById = async (ctx: any, next: any) => {
-      await crudModel.update({ _id: ctx.request.query.id }, ctx.request.body);
+      await crudModel.update({ _id: ctx.request.query.id }, ctx.request.body, ctx.requester);
       ctx.body = { result: true };
     };
     del = async (ctx: any, next: any) => {

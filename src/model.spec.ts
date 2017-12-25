@@ -138,7 +138,13 @@ describe('Crud Model Operations', async () => {
     let result = await newCrudModel.findOne(query);
     expect(result).not.to.be.empty;
     const id = result.id;
-    await newCrudModel.update({ _id: id, cid: 1 }, { name: "updateName" });
+
+    const modifier = {
+      cid: 1,
+      uid: "5a097f89f8652d614301903f",
+      username: "modifier_admin"
+    };
+    await newCrudModel.update({ _id: id, cid: 1 }, { name: "updateName" },modifier);
     q = { criteria: { _id: id, cid: 1 } };
     query = await model.decorateQuery(q);
     let result2 = await newCrudModel.findOne(query);

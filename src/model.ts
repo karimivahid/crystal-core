@@ -38,8 +38,8 @@ export interface CrudModelInterface {
     total: number;
   }>;
   findOne: (query: StrictQueryInterface, populate?: ModelPopulateOptions) => Promise<any>;
-  insert: (data: any, creator?: any) => Promise<any>;
-  update: (options: FindByIDOptions, data: any) => Promise<void>;
+  insert: (data: any, creator: any) => Promise<any>;
+  update: (options: FindByIDOptions, data: any, modifier: any) => Promise<void>;
   del: (options: FindByIDOptions) => Promise<void>;
   model: PaginateModel<Document>;
   [name: string]: any
@@ -103,6 +103,10 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
       uid: { type: "ObjectId", ref: 'User', required: true }
     };
     definition['modifiedAt'] = { type: Date, default: Date.now };
+    definition['modifiedBy'] = {
+      username: String,
+      uid: { type: "ObjectId", ref: 'User' }
+    };
   }
   if (tenancy) {
     definition['cid'] = { type: Number, required: true, index: true }
@@ -189,20 +193,22 @@ export function createModel(name: string, schema: Schema): CrudModelInterface {
     }
     return result;
   };
-  let insert = async (data: any, creator?: any) => {
+  let insert = async (data: any, creator: any) => {
     let result: any = new myModel(data);
+    result.createdAt = Date.now();
     result.createdBy = creator;
     await result.save();
     return result;
 
   };
-  let update = async (options: FindByIDOptions, data: any) => {
+  let update = async (options: FindByIDOptions, data: any, modifier: any) => {
     let result: any = await findOne(
       {
         criteria: options,
         options: { select: {} }
       });
     result.modifiedAt = Date.now();
+    result.modifiedBy = modifier;
     await result.set(data);
     await result.save();
   };

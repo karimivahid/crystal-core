@@ -13,13 +13,7 @@ describe('Crud API Operations', async () => {
     await model.init("testDatabase");
     newCrudSchema = model.createSchema({
       cid: { type: Number, required: true, index: true },
-      name: { type: String, maxlength: 20, required: true },
-      createdAt: { type: Date, default: Date.now, required: true },
-      createdBy: {
-        username: { type: String, minlength: 3, maxlength: 20, required: true },
-        uid: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
-      },
-      modifiedAt: { type: Date, default: Date.now },
+      name: { type: String, maxlength: 20, required: true }
     });
   });
 
