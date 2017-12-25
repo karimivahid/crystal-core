@@ -169,9 +169,9 @@ describe('Crud Model Operations', async () => {
   });
 
   after(function (done) {
-    // mongoose.connection.db.dropDatabase(function () {
+    mongoose.connection.db.dropDatabase(function () {
       mongoose.connection.close(done);
-    // });
+    });
   });
 
 

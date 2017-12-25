@@ -32,7 +32,7 @@ describe('Crud API Operations', async () => {
       request: { body: { cid: "5a2297320df810338a1fe954", name: "siamak" } },
       requester: {
         cid: "5a2297320df810338a1fe954",
-        uid: "5a2297320df810338a1fe954",
+        uid: "5a2297320df810338a1fe953",
         username: "farhadi"
       }
     };
@@ -49,7 +49,7 @@ describe('Crud API Operations', async () => {
       request: { body: { cid: "5a2297320df810338a1fe954" } },
       requester: {
         cid: "5a2297320df810338a1fe954",
-        uid: "5a2297320df810338a1fe954",
+        uid: "5a2297320df810338a1fe953",
         username: "farhadi"
       }
     };
@@ -61,9 +61,9 @@ describe('Crud API Operations', async () => {
 
 
   after(function (done) {
-    // mongoose.connection.db.dropDatabase(function () {
+    mongoose.connection.db.dropDatabase(function () {
       mongoose.connection.close(done);
-    // });
+    });
   });
 
 

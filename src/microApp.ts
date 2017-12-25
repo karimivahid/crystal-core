@@ -49,6 +49,15 @@ export function createApp(routers: any[], listenPort = 4001) {
     if (ctx.request.body.createdBy) {
       delete ctx.request.body.createdBy;
     }
+    if (ctx.request.body.createdAt) {
+      delete ctx.request.body.createdAt;
+    }
+    if (ctx.request.body.modifiedBy) {
+      delete ctx.request.body.modifiedBy;
+    }   
+    if (ctx.request.body.modifiedAt) {
+      delete ctx.request.body.modifiedAt;
+    }  
     await next();
   });
 
