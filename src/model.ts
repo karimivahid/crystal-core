@@ -9,7 +9,7 @@ const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 export interface QueryInterface {
   criteria: {
-    cid?: number;
+    cid?: string;
     _id?: string;
     [name: string]: any
   };
@@ -29,7 +29,7 @@ export interface StrictQueryInterface extends QueryInterface {
 
 export interface FindByIDOptions {
   _id: string;
-  cid?: number;
+  cid?: string;
 }
 
 export interface CrudModelInterface {
@@ -109,7 +109,7 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
     };
   }
   if (tenancy) {
-    definition['cid'] = { type: Number, required: true, index: true }
+    definition['cid'] = { type: "ObjectId", required: true, index: true }
   }
   if (customFields) {
     let cf = new Schema({

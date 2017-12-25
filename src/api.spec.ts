@@ -29,9 +29,9 @@ describe('Crud API Operations', async () => {
   it('should insert 10 new __testDoc2', async () => {
     let ctx: any = {
       body: {},
-      request: { body: { cid: 1, name: "siamak" } },
+      request: { body: { cid: "5a2297320df810338a1fe954", name: "siamak" } },
       requester: {
-        cid: 1,
+        cid: "5a2297320df810338a1fe954",
         uid: "5a2297320df810338a1fe954",
         username: "farhadi"
       }
@@ -46,9 +46,9 @@ describe('Crud API Operations', async () => {
     let ctx: any = {
       body: {},
       querystring: "",
-      request: { body: { cid: 1 } },
+      request: { body: { cid: "5a2297320df810338a1fe954" } },
       requester: {
-        cid: 1,
+        cid: "5a2297320df810338a1fe954",
         uid: "5a2297320df810338a1fe954",
         username: "farhadi"
       }
@@ -61,9 +61,9 @@ describe('Crud API Operations', async () => {
 
 
   after(function (done) {
-    mongoose.connection.db.dropDatabase(function () {
+    // mongoose.connection.db.dropDatabase(function () {
       mongoose.connection.close(done);
-    });
+    // });
   });
 
 

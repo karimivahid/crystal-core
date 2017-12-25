@@ -47,18 +47,18 @@ describe('Crud Model Operations', async () => {
 
   it('should insert 10 new records', async () => {
     const creator = {
-      cid: 1,
+      cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
     for (let i = 0; i < 10; i++) {
-      await newCrudModel.insert({ cid: 1, name: "a" + i }, creator);
+      await newCrudModel.insert({ cid: "5a2297320df810338a1fe954", name: "a" + i }, creator);
     }
   });
 
   it('should not insert this record', async () => {
     const creator = {
-      cid: 1,
+      cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
@@ -72,7 +72,7 @@ describe('Crud Model Operations', async () => {
 
   it('should throw error records', async () => {
     const creator = {
-      cid: 1,
+      cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
@@ -86,12 +86,12 @@ describe('Crud Model Operations', async () => {
 
   it('should throw error records too', async () => {
     const creator = {
-      cid: 1,
+      cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
     try {
-      await newCrudModel.insert({ cid: 1, name: "a0" }, creator);
+      await newCrudModel.insert({ cid: "5a2297320df810338a1fe954", name: "a0" }, creator);
     }
     catch (e) {
       expect(e).not.to.be.empty;
@@ -102,7 +102,7 @@ describe('Crud Model Operations', async () => {
 
   it('should find a record with name and limit option', async () => {
     const query = {
-      'criteria': { cid: 1, name: "a1" },
+      'criteria': { cid: "5a2297320df810338a1fe954", name: "a1" },
       'options': {
         'select': {},
         'limit': 1
@@ -114,7 +114,7 @@ describe('Crud Model Operations', async () => {
 
   it('should find a record with id', async () => {
     const query = {
-      'criteria': { cid: 1, name: "a1" },
+      'criteria': { cid: "5a2297320df810338a1fe954", name: "a1" },
       'options': {
         'select': {},
       }
@@ -123,7 +123,7 @@ describe('Crud Model Operations', async () => {
     expect(result).to.be.an('object').and.not.to.be.empty;
     let result2 = await newCrudModel.findOne({
       criteria: {
-        _id: result.id, cid: 1
+        _id: result.id, cid: "5a2297320df810338a1fe954"
       },
       options: {
         select: {}
@@ -133,33 +133,33 @@ describe('Crud Model Operations', async () => {
   });
 
   it('should update a record with id', async () => {
-    let q: model.QueryInterface = { 'criteria': { cid: 1, name: "a2" } };
+    let q: model.QueryInterface = { 'criteria': { cid: "5a2297320df810338a1fe954", name: "a2" } };
     let query = await model.decorateQuery(q);
     let result = await newCrudModel.findOne(query);
     expect(result).not.to.be.empty;
     const id = result.id;
 
     const modifier = {
-      cid: 1,
+      cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d614301903f",
       username: "modifier_admin"
     };
-    await newCrudModel.update({ _id: id, cid: 1 }, { name: "updateName" },modifier);
-    q = { criteria: { _id: id, cid: 1 } };
+    await newCrudModel.update({ _id: id, cid: "5a2297320df810338a1fe954" }, { name: "updateName" },modifier);
+    q = { criteria: { _id: id, cid: "5a2297320df810338a1fe954" } };
     query = await model.decorateQuery(q);
     let result2 = await newCrudModel.findOne(query);
     expect(result2).not.to.be.empty;
   });
 
   it('should delete a record with id', async () => {
-    let q: model.QueryInterface = { 'criteria': { cid: 1, name: "a3" } };
+    let q: model.QueryInterface = { 'criteria': { cid: "5a2297320df810338a1fe954", name: "a3" } };
     let query = await model.decorateQuery(q);
     let result = await newCrudModel.findOne(query);
     expect(result).not.to.be.empty;
     const id = result.id;
-    await newCrudModel.del({ _id: id, cid: 1 });
+    await newCrudModel.del({ _id: id, cid: "5a2297320df810338a1fe954" });
     try {
-      q = { criteria: { _id: id, cid: 1 } };
+      q = { criteria: { _id: id, cid: "5a2297320df810338a1fe954" } };
       query = await model.decorateQuery(q);
       await newCrudModel.findOne(query);
     }
@@ -169,9 +169,9 @@ describe('Crud Model Operations', async () => {
   });
 
   after(function (done) {
-    mongoose.connection.db.dropDatabase(function () {
+    // mongoose.connection.db.dropDatabase(function () {
       mongoose.connection.close(done);
-    });
+    // });
   });
 
 
