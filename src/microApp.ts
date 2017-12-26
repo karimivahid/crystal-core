@@ -43,7 +43,8 @@ export function createApp(routers: any[], listenPort = 4001) {
     ctx.requester = {
       cid: ctx.request.headers["x-cid"],
       uid: ctx.request.headers["x-uid"],
-      username: ctx.request.headers["x-username"]
+      username: ctx.request.headers["x-username"],
+      tokenId: ctx.request.headers["x-tokenId"]
     };
     ctx.request.body.cid = ctx.request.headers["x-cid"];
     if (ctx.request.body.createdBy) {
@@ -54,10 +55,10 @@ export function createApp(routers: any[], listenPort = 4001) {
     }
     if (ctx.request.body.modifiedBy) {
       delete ctx.request.body.modifiedBy;
-    }   
+    }
     if (ctx.request.body.modifiedAt) {
       delete ctx.request.body.modifiedAt;
-    }  
+    }
     await next();
   });
 
