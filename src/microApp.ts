@@ -36,7 +36,6 @@ export function createApp(routers: any[], listenPort = 4001) {
     const ms = Date.now() - start;
     ctx.set('X-Response-Time', `${ms}ms`);
   });
-
   app.use(async (ctx: any, next) => {
     // inject cid and uid from header to the body for model to validate
     // these headers are set by SUN Gateway
@@ -44,7 +43,7 @@ export function createApp(routers: any[], listenPort = 4001) {
       cid: ctx.request.headers["x-cid"],
       uid: ctx.request.headers["x-uid"],
       username: ctx.request.headers["x-username"],
-      tokenId: ctx.request.headers["x-tokenId"]
+      tokenId: ctx.request.headers["x-tokenid"]
     };
     ctx.request.body.cid = ctx.request.headers["x-cid"];
     if (ctx.request.body.createdBy) {
