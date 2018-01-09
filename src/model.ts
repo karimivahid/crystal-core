@@ -117,19 +117,10 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
     definition['cid'] = { type: "ObjectId", required: true, index: true }
   }
   if (customFields) {
-    let cf = new Schema({
+    definition['customFields'] = [{
       customFieldsId: { type: "ObjectId", ref: 'CustomField' },
-      key: { type: String, maxlength: 50, required: true },
       value: { type: String, maxlength: 50, required: true }
-    }, {
-        versionKey: false,
-      });
-    cf.set('toJSON', {
-      virtuals: true,
-      versionKey: false,
-      transform: function (doc: any, ret: any) { delete ret._id; delete ret.cid; }
-    });
-    definition['customFields'] = [cf];
+    }];
   }
   const schema = new Schema(definition);
   schema.set('toJSON', {
