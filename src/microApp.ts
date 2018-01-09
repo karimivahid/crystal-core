@@ -43,7 +43,6 @@ export function createApp(routers: any[], listenPort = 4001) {
       cid: ctx.request.headers["x-cid"],
       uid: ctx.request.headers["x-uid"],
       username: ctx.request.headers["x-username"],
-      tokenId: ctx.request.headers["x-tokenid"]
     };
     ctx.request.body.cid = ctx.request.headers["x-cid"];
     if (ctx.request.body.createdBy) {

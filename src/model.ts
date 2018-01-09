@@ -19,6 +19,10 @@ export interface QueryInterface {
   };
 };
 
+export interface CreateSchemaInterface {
+
+}
+
 
 export interface StrictQueryInterface extends QueryInterface {
   options: {
@@ -78,6 +82,7 @@ function createValidationError(error: any, doc: any, next: any) {
   let out: any[] = [];
   for (let key in error.errors) {
     let field = error.errors[key];
+    console.log(field);
     if (field.path === "cid") {
       continue;
     }
@@ -113,6 +118,7 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
   }
   if (customFields) {
     let cf = new Schema({
+      customFieldsId: { type: "ObjectId", ref: 'CustomField' },
       key: { type: String, maxlength: 50, required: true },
       value: { type: String, maxlength: 50, required: true }
     }, {
