@@ -118,7 +118,7 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
   }
   if (customFields) {
     definition['customFields'] = [{
-      customFieldsId: { type: "ObjectId", ref: 'CustomField' },
+      fieldId: { type: "ObjectId", ref: 'CustomField', required: true },
       value: { type: String, maxlength: 50, required: true }
     }];
   }
