@@ -1,6 +1,6 @@
 {
   "name": "crystal-core",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "This is the SAN microservice module for building fast REST API microservices",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
@@ -38,7 +38,7 @@
     "mongoose": "^4.13.0",
     "mongoose-beautiful-unique-validation": "^7.0.0",
     "mongoose-paginate": "^5.0.3",
-    "query-to-mongo": "^0.7.0"
+    "query-to-mongo": "git+https://github.com/siamaksalman/query-to-mongo.git"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",

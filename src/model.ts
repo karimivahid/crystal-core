@@ -122,7 +122,7 @@ export function createSchema(definition: SchemaDefinition, addTracker = true, te
       value: { type: String, maxlength: 50, required: true }
     }];
   }
-  const schema = new Schema(definition);
+  const schema = new Schema(definition, { versionKey: false });
   schema.set('toJSON', {
     virtuals: true,
     versionKey: false,

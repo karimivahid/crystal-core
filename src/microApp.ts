@@ -73,6 +73,7 @@ export function createApp(routers: any[], listenPort = 4001) {
   // is a good practice to kill the process if there is a error that we didn't handled
   app.on('error', (err, ctx: Koa.Context) => {
     if (!err.isOperationalError) {
+      // console.log(err);
       server.close(() => process.exit(1));
     }
   });
