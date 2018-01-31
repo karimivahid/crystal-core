@@ -32,8 +32,9 @@ function createErrorMessage(err: any) {
 describe('Crud Model Operations', async () => {
   let newCrudSchema: any;
   let newCrudModel: model.CrudModelInterface;
+  let connection: any;
   before(async function () {
-    await model.init("testDatabase");
+    connection = await model.init("testDatabase");
     newCrudSchema = model.createSchema({ name: { type: String, maxlength: 10, required: true } });
   });
 
@@ -144,7 +145,7 @@ describe('Crud Model Operations', async () => {
       uid: "5a097f89f8652d614301903f",
       username: "modifier_admin"
     };
-    await newCrudModel.update({ _id: id, cid: "5a2297320df810338a1fe954" }, { name: "updateName" },modifier);
+    await newCrudModel.update({ _id: id, cid: "5a2297320df810338a1fe954" }, { name: "updateName" }, modifier);
     q = { criteria: { _id: id, cid: "5a2297320df810338a1fe954" } };
     query = await model.decorateQuery(q);
     let result2 = await newCrudModel.findOne(query);
@@ -169,8 +170,8 @@ describe('Crud Model Operations', async () => {
   });
 
   after(function (done) {
-    mongoose.connection.db.dropDatabase(function () {
-      mongoose.connection.close(done);
+    connection.db.dropDatabase(function () {
+      connection.close(done);
     });
   });
 

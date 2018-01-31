@@ -2,7 +2,7 @@
 import AppError from './appError';
 // for pagination
 import * as mongoosePaginate from 'mongoose-paginate';
-import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, connection, ModelPopulateOptions, ValidationError } from 'mongoose';
+import { SchemaDefinition, Schema, Types, model, Document, PaginateModel, connect, ModelPopulateOptions, ValidationError } from 'mongoose';
 require('mongoose').Promise = global.Promise;
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
@@ -58,8 +58,9 @@ export interface CrudModelInterface {
  */
 export async function init(database: string = "mydb") {
   try {
-    await connect(`mongodb://mongodb/${database}`, { useMongoClient: true });
+    let connection = await connect(`mongodb://mongodb/${database}`, { useMongoClient: true });
     console.log(`DB is now connected to ${database}`);
+    return connection;
   }
   catch (e) {
     console.log(`Warning: DB can't connect to ${database}, retrying in 10 secconds`);
