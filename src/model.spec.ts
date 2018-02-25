@@ -1,11 +1,8 @@
 /// <reference types="mocha" />
-import { expect } from 'chai';
-import * as mongoose from 'mongoose';
+import { expect } from "chai";
+import * as mongoose from "mongoose";
 
 import * as model from "./model";
-
-
-
 
 function createErrorMessage(err: any) {
   let errorMessage: any = {
@@ -14,7 +11,6 @@ function createErrorMessage(err: any) {
   };
 
   for (let prop in err.errors) {
-
     errorMessage.errors.push({
       propertyName: prop,
       propertyPath: err.errors[prop].path,
@@ -28,36 +24,39 @@ function createErrorMessage(err: any) {
   return errorMessage;
 }
 
-
-describe('Crud Model Operations', async () => {
+describe("Crud Model Operations", async () => {
   let newCrudSchema: any;
   let newCrudModel: model.CrudModelInterface;
   let connection: any;
-  before(async function () {
+  before(async function() {
     connection = await model.init("testDatabase");
-    newCrudSchema = model.createSchema({ name: { type: String, maxlength: 10, required: true } });
+    newCrudSchema = model.createSchema({
+      name: { type: String, maxlength: 10, required: true }
+    });
   });
 
-
-  it('should create a test model', () => {
+  it("should create a test model", () => {
     newCrudSchema.addPagination();
     newCrudSchema.createIndex({ name: -1 });
     newCrudModel = model.createModel("__testDoc", newCrudSchema.schema);
     expect(newCrudModel.model).not.be.equals(undefined);
   });
 
-  it('should insert 10 new records', async () => {
+  it("should insert 10 new records", async () => {
     const creator = {
       cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
     for (let i = 0; i < 10; i++) {
-      await newCrudModel.insert({ cid: "5a2297320df810338a1fe954", name: "a" + i }, creator);
+      await newCrudModel.insert(
+        { cid: "5a2297320df810338a1fe954", name: "a" + i },
+        creator
+      );
     }
   });
 
-  it('should not insert this record', async () => {
+  it("should not insert this record", async () => {
     const creator = {
       cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
@@ -65,13 +64,12 @@ describe('Crud Model Operations', async () => {
     };
     try {
       await newCrudModel.insert({ name: "fakerplus23" }, creator);
-    }
-    catch (e) {
+    } catch (e) {
       expect(e).not.to.be.empty;
     }
   });
 
-  it('should throw error records', async () => {
+  it("should throw error records", async () => {
     const creator = {
       cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
@@ -79,52 +77,52 @@ describe('Crud Model Operations', async () => {
     };
     try {
       await newCrudModel.insert({ cid: "skdhaksdhsja", name: "aaaa" }, creator);
-    }
-    catch (e) {
+    } catch (e) {
       expect(e).not.to.be.empty;
     }
   });
 
-  it('should throw error records too', async () => {
+  it("should throw error records too", async () => {
     const creator = {
       cid: "5a2297320df810338a1fe954",
       uid: "5a097f89f8652d6143019039",
       username: "farhadi_tester"
     };
     try {
-      await newCrudModel.insert({ cid: "5a2297320df810338a1fe954", name: "a0" }, creator);
-    }
-    catch (e) {
+      await newCrudModel.insert(
+        { cid: "5a2297320df810338a1fe954", name: "a0" },
+        creator
+      );
+    } catch (e) {
       expect(e).not.to.be.empty;
     }
   });
 
-
-
-  it('should find a record with name and limit option', async () => {
+  it("should find a record with name and limit option", async () => {
     const query = {
-      'criteria': { cid: "5a2297320df810338a1fe954", name: "a1" },
-      'options': {
-        'select': {},
-        'limit': 1
+      criteria: { cid: "5a2297320df810338a1fe954", name: "a1" },
+      options: {
+        select: {},
+        limit: 1
       }
     };
     let result = await newCrudModel.findAll(query);
-    expect(result.docs).to.be.an('array').and.not.to.be.empty;
+    expect(result.docs).to.be.an("array").and.not.to.be.empty;
   });
 
-  it('should find a record with id', async () => {
+  it("should find a record with id", async () => {
     const query = {
-      'criteria': { cid: "5a2297320df810338a1fe954", name: "a1" },
-      'options': {
-        'select': {},
+      criteria: { cid: "5a2297320df810338a1fe954", name: "a1" },
+      options: {
+        select: {}
       }
     };
     let result = await newCrudModel.findOne(query);
-    expect(result).to.be.an('object').and.not.to.be.empty;
+    expect(result).to.be.an("object").and.not.to.be.empty;
     let result2 = await newCrudModel.findOne({
       criteria: {
-        _id: result.id, cid: "5a2297320df810338a1fe954"
+        _id: result.id,
+        cid: "5a2297320df810338a1fe954"
       },
       options: {
         select: {}
@@ -133,8 +131,10 @@ describe('Crud Model Operations', async () => {
     expect(result2).not.to.be.empty;
   });
 
-  it('should update a record with id', async () => {
-    let q: model.QueryInterface = { 'criteria': { cid: "5a2297320df810338a1fe954", name: "a2" } };
+  it("should update a record with id", async () => {
+    let q: model.QueryInterface = {
+      criteria: { cid: "5a2297320df810338a1fe954", name: "a2" }
+    };
     let query = await model.decorateQuery(q);
     let result = await newCrudModel.findOne(query);
     expect(result).not.to.be.empty;
@@ -145,15 +145,21 @@ describe('Crud Model Operations', async () => {
       uid: "5a097f89f8652d614301903f",
       username: "modifier_admin"
     };
-    await newCrudModel.update({ _id: id, cid: "5a2297320df810338a1fe954" }, { name: "updateName" }, modifier);
+    await newCrudModel.update(
+      { _id: id, cid: "5a2297320df810338a1fe954" },
+      { name: "updateName" },
+      modifier
+    );
     q = { criteria: { _id: id, cid: "5a2297320df810338a1fe954" } };
     query = await model.decorateQuery(q);
     let result2 = await newCrudModel.findOne(query);
     expect(result2).not.to.be.empty;
   });
 
-  it('should delete a record with id', async () => {
-    let q: model.QueryInterface = { 'criteria': { cid: "5a2297320df810338a1fe954", name: "a3" } };
+  it("should delete a record with id", async () => {
+    let q: model.QueryInterface = {
+      criteria: { cid: "5a2297320df810338a1fe954", name: "a3" }
+    };
     let query = await model.decorateQuery(q);
     let result = await newCrudModel.findOne(query);
     expect(result).not.to.be.empty;
@@ -163,17 +169,14 @@ describe('Crud Model Operations', async () => {
       q = { criteria: { _id: id, cid: "5a2297320df810338a1fe954" } };
       query = await model.decorateQuery(q);
       await newCrudModel.findOne(query);
-    }
-    catch (e) {
-      expect(e.message).to.be.equal('Empty Result');
+    } catch (e) {
+      expect(e.message).to.be.equal("Empty Result");
     }
   });
 
-  after(function (done) {
-    connection.db.dropDatabase(function () {
+  after(function(done) {
+    connection.db.dropDatabase(function() {
       connection.close(done);
     });
   });
-
-
 });

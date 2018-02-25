@@ -1,14 +1,17 @@
-import { CrudModelInterface, decorateQuery } from './model';
-import AppError from './appError';
-const q2m = require('query-to-mongo');
+import { CrudModelInterface, decorateQuery } from "./model";
+import AppError from "./appError";
+const q2m = require("query-to-mongo");
 
-export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: any) {
+export async function errorHandlerMiddleware(
+  ctx: any,
+  next: any,
+  errorsObject: any
+) {
   try {
     await next();
-  }
-  catch (e) {
+  } catch (e) {
     if (!e.errors || !e.errors.length) {
-      throw (e);
+      throw e;
     }
     let message = e.message;
     let status = 500;
@@ -18,8 +21,7 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
       if (index instanceof Object) {
         status = index.httpCode;
         errors.push(index);
-      }
-      else if (typeof index === "string") {
+      } else if (typeof index === "string") {
         if (!errorsObject[index]) {
           errors.push({ code: index });
           continue;
@@ -36,7 +38,6 @@ export async function errorHandlerMiddleware(ctx: any, next: any, errorsObject: 
     throw new AppError(message, status, errors);
   }
 }
-
 
 export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
   let findAll;
@@ -57,7 +58,7 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       let q = q2m(ctx.querystring);
       let query = await decorateQuery(q);
       delete query.criteria.id;
-      query.criteria._id = ctx.request.query.id
+      query.criteria._id = ctx.request.query.id;
       query.criteria.cid = ctx.request.body.cid;
       let result = await crudModel.findOne(query);
       ctx.body = { result: result };
@@ -67,19 +68,25 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       delete ctx.request.body._id;
       let result = await crudModel.insert(ctx.request.body, ctx.requester);
       ctx.body = {
-        result: { "id": result._id }
+        result: { id: result._id }
       };
     };
     updateById = async (ctx: any, next: any) => {
-      await crudModel.update({ _id: ctx.request.query.id, cid: ctx.request.body.cid }, ctx.request.body, ctx.requester);
+      await crudModel.update(
+        { _id: ctx.request.query.id, cid: ctx.request.body.cid },
+        ctx.request.body,
+        ctx.requester
+      );
       ctx.body = { result: true };
     };
     del = async (ctx: any, next: any) => {
-      await crudModel.del({ _id: ctx.request.query.id, cid: ctx.request.body.cid });
+      await crudModel.del({
+        _id: ctx.request.query.id,
+        cid: ctx.request.body.cid
+      });
       ctx.body = { result: true };
     };
-  }
-  else {
+  } else {
     findAll = async (ctx: any, next: any) => {
       let q = q2m(ctx.querystring);
       let query = await decorateQuery(q);
@@ -89,7 +96,7 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
     };
     findById = async (ctx: any, next: any) => {
       let result = await crudModel.findOne({
-        criteria: { _id: ctx.request.query.id, },
+        criteria: { _id: ctx.request.query.id },
         options: {
           select: {}
         }
@@ -100,10 +107,14 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
       delete ctx.request.body.id;
       delete ctx.request.body._id;
       let result = await crudModel.insert(ctx.request.body, ctx.requester);
-      ctx.body = { result: { "id": result._id } };
+      ctx.body = { result: { id: result._id } };
     };
     updateById = async (ctx: any, next: any) => {
-      await crudModel.update({ _id: ctx.request.query.id }, ctx.request.body, ctx.requester);
+      await crudModel.update(
+        { _id: ctx.request.query.id },
+        ctx.request.body,
+        ctx.requester
+      );
       ctx.body = { result: true };
     };
     del = async (ctx: any, next: any) => {
@@ -119,4 +130,3 @@ export function createCrudAPI(crudModel: CrudModelInterface, withCID = true) {
     del
   };
 }
-

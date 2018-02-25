@@ -1,12 +1,11 @@
 {
   "name": "crystal-core",
-  "version": "0.0.28",
-  "description": "This is the SAN microservice module for building fast REST API microservices",
+  "version": "0.0.29",
+  "description":
+    "This is the SAN microservice module for building fast REST API microservices",
   "main": "lib/main.js",
   "typings": "lib/main.d.ts",
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "scripts": {
     "build": "rimraf lib && tsc",
     "prepublishOnly": "npm run build",
