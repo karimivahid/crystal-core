@@ -34,6 +34,7 @@ export interface StrictQueryInterface extends QueryInterface {
   options: {
     select: any;
     limit?: number;
+    [name: string]: any;
   };
 }
 
@@ -44,7 +45,8 @@ export interface FindByIDOptions {
 
 export interface CrudModelInterface {
   findAll: (
-    query: StrictQueryInterface
+    query: StrictQueryInterface,
+    populate?: ModelPopulateOptions
   ) => Promise<{
     docs: Document[];
     total: number;
@@ -210,6 +212,9 @@ export function createModel(
       }
       const out = await result;
       return { docs: out, total: out.length };
+    }
+    if (populate) {
+      query.options.populate = populate;
     }
     let out = await myModel.paginate(query.criteria, query.options);
     return { docs: out.docs, total: out.total };
