@@ -195,13 +195,20 @@ export function createModel(
   collection?: string
 ): CrudModelInterface {
   const myModel = model(name, schema, collection);
-  let findAll = async (query: StrictQueryInterface) => {
+  let findAll = async (
+    query: StrictQueryInterface,
+    populate?: ModelPopulateOptions
+  ) => {
     if (!query.options.limit) {
-      let out = await myModel.find(
+      let result = myModel.find(
         query.criteria,
         query.options.select,
         query.options
       );
+      if (populate) {
+        result.populate(populate);
+      }
+      const out = await result;
       return { docs: out, total: out.length };
     }
     let out = await myModel.paginate(query.criteria, query.options);
@@ -241,6 +248,8 @@ export function createModel(
     });
     result.modifiedAt = Date.now();
     result.modifiedBy = modifier;
+    delete data.createdAt;
+    delete data.createdBy;
     await result.set(data);
     await result.save();
   };
