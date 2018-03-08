@@ -1,6 +1,6 @@
 {
   "name": "crystal-core",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description":
     "This is the SAN microservice module for building fast REST API microservices",
   "main": "lib/main.js",
@@ -41,17 +41,17 @@
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.43",
-    "chai": "^4.1.2",
-    "mocha": "^4.0.1",
     "@types/koa": "^2.0.39",
     "@types/koa-bodyparser": "^3.0.25",
     "@types/koa-router": "^7.0.23",
-    "@types/mongoose": "^4.7.25",
+    "@types/mocha": "^2.2.43",
+    "@types/mongoose": "^4.7.35",
     "@types/mongoose-paginate": "^5.0.6",
     "@types/node": "^8.0.49",
-    "typescript": "^2.6.2",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
     "rimraf": "^2.6.2",
-    "ts-node": "^3.3.0"
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.2"
   }
 }

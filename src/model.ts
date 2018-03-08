@@ -142,7 +142,10 @@ export function createSchema(
       }
     ];
   }
-  const schema = new Schema(definition, { versionKey: false });
+  const schema = new Schema(definition, {
+    usePushEach: true,
+    versionKey: false
+  });
   schema.set("toJSON", {
     virtuals: true,
     versionKey: false,
